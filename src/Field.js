@@ -13,10 +13,13 @@ function Field(props) {
     checked = !value
       ? Boolean(values[name])
       : Boolean(values[name] && ~values[name].indexOf(value));
+  } else if (type === 'radio') {
+    checked = values[name] === value;
   }
 
   return (
     <Input
+      name={name}
       type={type}
       value={value || values[name] || ''}
       checked={checked}

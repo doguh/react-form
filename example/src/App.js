@@ -12,9 +12,9 @@ export default class App extends Component {
           <label>
             Classe{' '}
             <Field name="class" component="select">
-              <option value="warrior">Warrior</option>
+              <option value="warrior">Guerrier</option>
               <option value="mage">Mage</option>
-              <option value="thief">Thief</option>
+              <option value="thief">Voleur</option>
             </Field>
           </label>
           <label>
@@ -23,6 +23,18 @@ export default class App extends Component {
           <label>
             Je signe <Field name="accept" type="checkbox" />
           </label>
+          <div>
+            Sexe
+            <label>
+              Homme <Field name="gender" value="male" type="radio" />
+            </label>
+            <label>
+              Femme <Field name="gender" value="female" type="radio" />
+            </label>
+            <label>
+              Autre <Field name="gender" value="other" type="radio" />
+            </label>
+          </div>
           <div>
             Multiple checkboxes
             <label>
