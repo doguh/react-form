@@ -27,10 +27,13 @@ export default class Form extends Component {
   };
 
   handleChange = (e, elem) => {
-    const { name, type, value: checkboxValue } = elem;
+    const { name, type, value: checkboxValue, multiple } = elem;
     let value = e.target.value;
 
     if (type === 'checkbox') {
+      /**
+       * checkbox special case
+       */
       if (!checkboxValue) {
         value = e.target.checked;
       } else {
@@ -47,11 +50,26 @@ export default class Form extends Component {
           }
         }
       }
+    } else if (e.target.options && multiple) {
+      /**
+       * select multiple special case
+       */
+      value = [];
+      for (let i = 0; i < e.target.options.length; i++) {
+        if (e.target.options[i].selected) {
+          value.push(e.target.options[i].value);
+        }
+      }
     }
 
     this.setState(state => ({
       values: { ...state.values, [name]: value }
     }));
+  };
+
+  handleSubmit = e => {
+    console.log(this.state.values);
+    e.preventDefault();
   };
 
   render() {

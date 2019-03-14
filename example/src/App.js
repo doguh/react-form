@@ -38,14 +38,22 @@ export default class App extends Component {
           <div>
             Multiple checkboxes
             <label>
-              Rouge <Field name="color" value="red" type="checkbox" />
+              Rouge <Field name="colors" value="red" type="checkbox" />
             </label>
             <label>
-              Bleu <Field name="color" value="blue" type="checkbox" />
+              Bleu <Field name="colors" value="blue" type="checkbox" />
             </label>
             <label>
-              Vert <Field name="color" value="green" type="checkbox" />
+              Vert <Field name="colors" value="green" type="checkbox" />
             </label>
+          </div>
+          <div>
+            Multiple select
+            <Field name="fruits" component="select" multiple>
+              <option value="apple">Pomme</option>
+              <option value="banana">Banane</option>
+              <option value="orange">Orange</option>
+            </Field>
           </div>
           <button type="submit">Submit</button>
         </Form>
