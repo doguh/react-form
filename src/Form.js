@@ -27,9 +27,30 @@ export default class Form extends Component {
   };
 
   handleChange = (e, elem) => {
-    const { value } = e.target;
+    const { name, type, value: checkboxValue } = elem;
+    let value = e.target.value;
+
+    if (type === 'checkbox') {
+      if (!checkboxValue) {
+        value = e.target.checked;
+      } else {
+        const { values } = this.state;
+        value = values[name] || [];
+        const index = value.indexOf(checkboxValue);
+        if (e.target.checked) {
+          if (!~index) {
+            value.push(checkboxValue);
+          }
+        } else {
+          if (~index) {
+            value.splice(index, 1);
+          }
+        }
+      }
+    }
+
     this.setState(state => ({
-      values: { ...state.values, [elem.name]: value }
+      values: { ...state.values, [name]: value }
     }));
   };
 

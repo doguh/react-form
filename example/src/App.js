@@ -20,6 +20,21 @@ export default class App extends Component {
           <label>
             Biographie <Field name="bio" component="textarea" />
           </label>
+          <label>
+            Je signe <Field name="accept" type="checkbox" />
+          </label>
+          <div>
+            Multiple checkboxes
+            <label>
+              Rouge <Field name="color" value="red" type="checkbox" />
+            </label>
+            <label>
+              Bleu <Field name="color" value="blue" type="checkbox" />
+            </label>
+            <label>
+              Vert <Field name="color" value="green" type="checkbox" />
+            </label>
+          </div>
           <button type="submit">Submit</button>
         </Form>
       </div>
