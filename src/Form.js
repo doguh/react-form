@@ -9,6 +9,7 @@ export default class Form extends Component {
       PropTypes.element,
       PropTypes.arrayOf(PropTypes.element),
     ]),
+    onSubmit: PropTypes.func,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -104,8 +105,10 @@ export default class Form extends Component {
 
   handleSubmit = e => {
     const values = this.getValues();
-    console.log({ values });
     e.preventDefault();
+    if (this.props.onSubmit) {
+      this.props.onSubmit(values, e);
+    }
   };
 
   getValues = () => {

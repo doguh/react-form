@@ -2,10 +2,20 @@ import React, { Component } from 'react';
 import Form, { Field } from 'react-form';
 
 export default class App extends Component {
+  state = {
+    user: {},
+  };
+
   render() {
     return (
       <div>
-        <Form>
+        <Form
+          values={this.state.user}
+          onSubmit={values => {
+            console.log(values);
+            this.setState({ user: values });
+          }}
+        >
           <label>
             Nom <Field name="name" type="text" />
           </label>
