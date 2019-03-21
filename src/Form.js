@@ -64,19 +64,20 @@ export default class Form extends Component {
 
   handleChange = (e, elem) => {
     const { name, type, value: checkboxValue, multiple } = elem;
-    let value = e.target.value;
+    const isEvent = e && e.nativeEvent && e.nativeEvent instanceof window.Event;
+    let value = isEvent ? e.target.value : e;
 
     if (type === 'checkbox') {
       /**
        * checkbox special case
        */
       if (!checkboxValue) {
-        value = e.target.checked;
+        if (isEvent) value = e.target.checked;
       } else {
         const { values } = this.state;
         value = values[name] || [];
         const index = value.indexOf(checkboxValue);
-        if (e.target.checked) {
+        if (isEvent ? e.target.checked : value) {
           if (!~index) {
             value.push(checkboxValue);
           }
@@ -86,7 +87,7 @@ export default class Form extends Component {
           }
         }
       }
-    } else if (e.target.options && multiple) {
+    } else if (isEvent && e.target.options && multiple) {
       /**
        * select multiple special case
        */
