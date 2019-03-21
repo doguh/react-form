@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import FormContext from './FormContext';
 
@@ -11,10 +11,10 @@ function Field(props) {
     value,
     children,
     inputProps,
-    multiple
+    multiple,
   } = props;
   const Input = component || 'input';
-  const { values, handleChange } = context;
+  const { values, handleChange, registerField, unregisterField } = context;
 
   let checked;
   if (type === 'checkbox') {
@@ -30,6 +30,14 @@ function Field(props) {
      */
     checked = values[name] === value;
   }
+
+  useEffect(() => {
+    const field = { name, type, value, multiple };
+    registerField(field);
+    return () => {
+      unregisterField(field);
+    };
+  });
 
   return (
     <Input
@@ -51,16 +59,16 @@ Field.propTypes = {
   component: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.func,
-    PropTypes.element
+    PropTypes.element,
   ]),
   type: PropTypes.string,
   value: PropTypes.string,
   multiple: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element)
+    PropTypes.arrayOf(PropTypes.element),
   ]),
-  inputProps: PropTypes.object
+  inputProps: PropTypes.object,
 };
 
 export default Field;

@@ -7,15 +7,15 @@ export default class Form extends Component {
     values: PropTypes.object,
     children: PropTypes.oneOfType([
       PropTypes.element,
-      PropTypes.arrayOf(PropTypes.element)
-    ])
+      PropTypes.arrayOf(PropTypes.element),
+    ]),
   };
 
   static getDerivedStateFromProps(props, state) {
     if (props.values !== state.propsValues) {
       return {
         values: props.values || {},
-        propsValues: props.values
+        propsValues: props.values,
       };
     }
     return null;
@@ -23,7 +23,42 @@ export default class Form extends Component {
 
   state = {
     values: this.props.values || {},
-    propsValues: this.props.values
+    propsValues: this.props.values,
+  };
+
+  fields = {};
+
+  registerField = field => {
+    if (field.type === 'radio' || (field.type === 'checkbox' && field.value)) {
+      /**
+       * radio + checkbox with value
+       * special case
+       */
+      if (!this.fields[field.name]) {
+        this.fields[field.name] = [];
+      }
+      this.fields[field.name].push(field);
+    } else {
+      this.fields[field.name] = field;
+    }
+  };
+
+  unregisterField = field => {
+    if (field.type === 'radio' || (field.type === 'checkbox' && field.value)) {
+      /**
+       * radio + checkbox with value
+       * special case
+       */
+      const index = this.fields[field.name].indexOf(field);
+      if (~index) {
+        this.fields[field.name].splice(index, 1);
+        if (this.fields[field.name].length === 0) {
+          delete this.fields[field.name];
+        }
+      }
+    } else {
+      delete this.fields[field.name];
+    }
   };
 
   handleChange = (e, elem) => {
@@ -63,24 +98,53 @@ export default class Form extends Component {
     }
 
     this.setState(state => ({
-      values: { ...state.values, [name]: value }
+      values: { ...state.values, [name]: value },
     }));
   };
 
   handleSubmit = e => {
-    console.log(this.state.values);
+    const values = this.getValues();
+    console.log({ values });
     e.preventDefault();
+  };
+
+  getValues = () => {
+    const values = {};
+    Object.keys(this.fields).forEach(name => {
+      if (this.state.values[name]) {
+        // if value is in state, use it
+        values[name] = this.state.values[name];
+      } else {
+        // else, use a default value depending on field type
+        const field = this.fields[name];
+        if (Array.isArray(field)) {
+          // list of checkbox or radio
+          values[name] = field[0].type === 'checkbox' ? [] : undefined;
+        } else if (field.multiple) {
+          // multiple attribute to true
+          values[name] = [];
+        } else if (field.type === 'checkbox') {
+          // checkbox alone
+          values[name] = false;
+        } else {
+          // text and others
+          values[name] = '';
+        }
+      }
+    });
+    return values;
   };
 
   render() {
     const { children } = this.props;
     const { values } = this.state;
-    console.log(values);
     return (
       <FormContext.Provider
         value={{
           values,
-          handleChange: this.handleChange
+          handleChange: this.handleChange,
+          registerField: this.registerField,
+          unregisterField: this.unregisterField,
         }}
       >
         <form autoComplete="off" onSubmit={this.handleSubmit}>
