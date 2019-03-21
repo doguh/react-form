@@ -1,5 +1,23 @@
 import React, { Component } from 'react';
 import { Form, Field } from '@doguh/react-form';
+import ReactSelect from 'react-select';
+
+const ReactSelectWrapper = props => {
+  const value = props.options.find(opt => opt.value === props.value) || null;
+  return (
+    <ReactSelect
+      {...props}
+      value={value}
+      onChange={v => props.onChange(v.value)}
+    />
+  );
+};
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
+];
 
 export default class App extends Component {
   state = {
@@ -12,6 +30,7 @@ export default class App extends Component {
         <Form
           values={this.state.user}
           onSubmit={values => {
+            console.log('on submit');
             console.log(values);
             this.setState({ user: values });
           }}
@@ -65,7 +84,18 @@ export default class App extends Component {
               <option value="orange">Orange</option>
             </Field>
           </div>
+          <label>
+            Custom select{' '}
+            <Field
+              name="flavor"
+              component={ReactSelectWrapper}
+              inputProps={{ options }}
+            />
+          </label>
           <button type="submit">Submit</button>
+          <button type="button" onClick={() => this.setState({ user: {} })}>
+            Reset
+          </button>
         </Form>
       </div>
     );
