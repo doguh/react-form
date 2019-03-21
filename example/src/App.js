@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Field } from 'react-form';
+import { Form, Field } from '@doguh/react-form';
 
 export default class App extends Component {
   state = {
